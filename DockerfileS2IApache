@@ -12,15 +12,16 @@ FROM registry.redhat.io/ubi9/httpd-24
 
 # Check
 # http://192.168.2.57:8080/
+# http://192.168.2.55:8080/
 # https://localhost:8080/
 
 
 # Add application sources to a directory where the assemble script expects them
 # and set permissions so that the container runs without the root access
-USER 0
+# USER 0
 ADD index.html /tmp/src/index.html
-RUN chown -R 1001:0 /tmp/src
-USER 1001
+# RUN chown -R 1001:0 /tmp/src
+# USER 1001
 
 # Let the assemble script install the dependencies
 RUN /usr/libexec/s2i/assemble
