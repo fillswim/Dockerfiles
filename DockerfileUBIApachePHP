@@ -1,5 +1,11 @@
 FROM registry.access.redhat.com/ubi9/ubi
 
+# Build
+# podman build -t fillswim/mysite_ubi_apache_php:latest -f DockerfileUBIApachePHP .
+
+# Run
+# podman run -it -p 1234:8080 fillswim/mysite_ubi_apache_php:latest
+
 # Включение потока модуля
 # --disableplugin=subscription-manager - Отключение уведомление об отсутствии подписки
 RUN yum --disableplugin=subscription-manager -y module enable php
