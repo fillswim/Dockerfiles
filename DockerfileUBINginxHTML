@@ -1,0 +1,16 @@
+FROM registry.access.redhat.com/ubi9/ubi
+
+# Build
+# podman build -t fillswim/mysite_ubi_nginx_html:latest -f DockerfileUBINginxHTML .
+
+# Run
+# podman run -it -p 1234:80 fillswim/mysite_ubi_nginx_html:latest
+
+RUN yum --disableplugin=subscription-manager -y install nginx
+RUN yum --disableplugin=subscription-manager clean all
+
+ADD index.html /usr/share/nginx/html
+
+EXPOSE 80
+
+CMD ["nginx", "-g", "daemon off;"]
