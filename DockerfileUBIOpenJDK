@@ -1,0 +1,20 @@
+FROM registry.access.redhat.com/ubi9/ubi
+
+# Build
+# podman build -t fillswim/gifservice_ubi_openjdk:latest -f DockerfileUBIOpenJDK .
+
+# Run
+# podman run -it -p 1234:8080 fillswim/gifservice_ubi_openjdk:latest
+
+RUN yum --disableplugin=subscription-manager -y install java-11-openjdk
+RUN yum --disableplugin=subscription-manager clean all
+
+# ADD index.html /usr/share/nginx/html
+COPY GifService-0.0.1-SNAPSHOT.jar /tmp
+
+WORKDIR /tmp
+
+EXPOSE 8080
+
+# CMD ["nginx", "-g", "daemon off;"]
+CMD java -jar ./GifService-0.0.1-SNAPSHOT.jar
