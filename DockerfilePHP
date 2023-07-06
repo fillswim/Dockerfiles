@@ -1,0 +1,9 @@
+FROM docker.io/library/php:apache
+
+# Build
+# podman build -t fillswim/mysite_dockerhub_php:latest -f DockerfilePHP .
+
+# Run
+# podman run -it -p 1234:80 fillswim/mysite_dockerhub_php:latest
+
+COPY index.php /var/www/html
