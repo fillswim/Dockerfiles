@@ -1,0 +1,21 @@
+FROM ubuntu:22.04
+
+# Build
+# podman build -t fillswim/mysite_ubuntu_nginx_html:latest -f DockerfileUbuntuNginxHTML .
+
+# Run
+# podman run -it -p 1234:80 fillswim/mysite_ubuntu_nginx_html:latest
+
+ENV TZ=Europe/Moscow
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+
+RUN apt update -y
+RUN apt upgrade -y
+RUN apt install -y nginx 
+
+COPY ./index.html /var/www/html/index.html
+RUN rm -rf /var/www/html/index.nginx-debian.html
+
+EXPOSE 80
+
+CMD ["nginx", "-g", "daemon off;"]

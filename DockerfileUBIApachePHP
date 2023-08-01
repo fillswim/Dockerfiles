@@ -1,0 +1,42 @@
+FROM registry.access.redhat.com/ubi9/ubi
+
+# Build
+# podman build -t fillswim/mysite_ubi_apache_php:latest -f DockerfileUBIApachePHP .
+
+# Run
+# podman run -it -p 1234:8080 fillswim/mysite_ubi_apache_php:latest
+
+# Включение потока модуля
+# --disableplugin=subscription-manager - Отключение уведомление об отсутствии подписки
+RUN yum --disableplugin=subscription-manager -y module enable php
+RUN yum --disableplugin=subscription-manager -y install php
+RUN yum --disableplugin=subscription-manager -y install httpd
+# yum clean all - удалить все пакеты и метаданные из кэша
+RUN yum --disableplugin=subscription-manager clean all
+
+# или
+# RUN yum --disableplugin=subscription-manager -y module enable php \
+#  && yum --disableplugin=subscription-manager -y install httpd php \
+#  && yum --disableplugin=subscription-manager clean all
+
+# Скопировать index.php в /var/www/html/index.php
+ADD index.php /var/www/html
+
+# chgrp -R 0
+# chgrp - изменеие группы владельца файла/каталога
+# -R - рекурсивная обработка каталога со всем его содержимым
+# chgrp 0 - заменить группу владельцев на root
+# chmod g=u - предоставление группе тех прав доступа, которыми владеет владелец файла
+RUN sed -i 's/Listen 80/Listen 8080/' /etc/httpd/conf/httpd.conf \
+  && sed -i 's/listen.acl_users = apache,nginx/listen.acl_users =/' /etc/php-fpm.d/www.conf \
+  && mkdir /run/php-fpm \
+  && chgrp -R 0 /var/log/httpd /var/run/httpd /run/php-fpm \
+  && chmod -R g=u /var/log/httpd /var/run/httpd /run/php-fpm
+
+# Открыть порт 8080
+EXPOSE 8080
+
+# Добавляется не-root пользователь для запуска контейнера 
+USER 1001
+
+CMD php-fpm & httpd -D FOREGROUND

@@ -1,0 +1,22 @@
+FROM ubuntu:22.04
+
+# Build
+# podman build -t fillswim/gifservice_ubuntu_openjdk:latest -f DockerfileUbuntuOpenJDK .
+
+# Run
+# podman run -it -p 1234:8080 fillswim/gifservice_ubuntu_openjdk:latest
+
+ENV TZ=Europe/Moscow
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+
+RUN apt update -y
+RUN apt upgrade -y
+RUN apt install -y openjdk-11-jre 
+
+COPY GifService-0.0.1-SNAPSHOT.jar /tmp
+
+WORKDIR /tmp
+
+EXPOSE 8080
+
+CMD java -jar ./GifService-0.0.1-SNAPSHOT.jar

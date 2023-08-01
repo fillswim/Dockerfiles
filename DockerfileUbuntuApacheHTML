@@ -1,0 +1,20 @@
+FROM ubuntu:22.04
+
+# Build
+# podman build -t fillswim/mysite_ubuntu_apache_html:latest -f DockerfileUbuntuApacheHTML .
+
+# Run
+# podman run -it -p 1234:80 fillswim/mysite_ubuntu_apache_html:latest
+
+ENV TZ=Europe/Moscow
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+
+RUN apt update -y
+RUN apt upgrade -y
+RUN apt install -y apache2 
+
+COPY ./index.html /var/www/html/index.html
+
+EXPOSE 80
+
+CMD ["apache2ctl", "-D", "FOREGROUND"]
